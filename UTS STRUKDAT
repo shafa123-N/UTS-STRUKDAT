@@ -1,0 +1,70 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct Mahasiswa {
+    string nama;
+    string NIM;
+    float nilai[5];
+};
+
+void tampilkanTabelMahasiswa(const vector<Mahasiswa>& mahasiswaTable) {
+    cout << "+--------------------------------+------------+-----------------------+" << endl;
+    cout << "| Nama                           | NIM        | Nilai Mata Kuliah     |" << endl;
+    cout << "+--------------------------------+------------+-----------------------+" << endl;
+    for (size_t i = 0; i < mahasiswaTable.size(); ++i) {
+        const auto& mahasiswa = mahasiswaTable[i];
+        cout << "| " << setw(30) << left << mahasiswa.nama
+             << "| " << setw(10) << mahasiswa.NIM
+             << "| ";
+        for (int j = 0; j < 5; ++j) {
+            cout << setw(3) << mahasiswa.nilai[j] << (j < 4 ? ", " : "");
+        }
+        cout << setw(23 - 18) << right << "|" << endl; 
+    }
+    cout << "+--------------------------------+------------+-----------------------+" << endl;
+}
+
+void editMahasiswa(vector<Mahasiswa>& mahasiswaTable) {
+    int index;
+    tampilkanTabelMahasiswa(mahasiswaTable);
+    cout << "Enter the number of the student to edit: ";
+    cin >> index;
+    index--; // Adjust for 0-based index
+
+    if (index >= 0 && index < mahasiswaTable.size()) {
+        Mahasiswa& mahasiswa = mahasiswaTable[index];
+        cout << "Enter new name: ";
+        cin.ignore(); // Ignore newline character from previous input
+        getline(cin, mahasiswa.nama);
+        cout << "Enter new NIM: ";
+        getline(cin, mahasiswa.NIM);
+        cout << "Enter new grades for 5 courses:" << endl;
+        for (float &nilai : mahasiswa.nilai) {
+            cin >> nilai;
+        }
+    } else {
+        cout << "Invalid student number." << endl;
+    }
+}
+
+int main() {
+    vector<Mahasiswa> mahasiswaTable = {
+        {"John Doe", "123456789", {85, 90, 75, 80, 95}},
+        {"Jane Smith", "987654321", {90, 85, 95, 70, 88}},
+        {"Alice", "111", {88, 76, 92, 84, 90}}
+    };
+
+    cout << "Original student data:" << endl;
+    tampilkanTabelMahasiswa(mahasiswaTable);
+
+    editMahasiswa(mahasiswaTable);
+
+    cout << "\nUpdated student data:" << endl;
+    tampilkanTabelMahasiswa(mahasiswaTable);
+
+    return 0;
+}
